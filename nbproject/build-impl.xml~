@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TicketHub-impl" default="default" basedir="..">
+    
+    <property file="nbproject/private/private.properties"/>
+    <property file="nbproject/project.properties"/>
+
+    <target name="default" depends="dist" description="Builds the web archive"/>
+
+    <target name="-init">
+        <property name="build.dir" value="build"/>
+        <property name="dist.dir" value="dist"/>
+        <property name="src.dir" value="src/java"/>
+        <property name="web.docbase.dir" value="web"/>
+        <property name="build.classes.dir" value="${build.dir}/web/WEB-INF/classes"/>
+        <property name="build.web.dir" value="${build.dir}/web"/>
+        <property name="war.name" value="TicketHub.war"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile" depends="-init" description="Compiles Java source files">
+        <javac srcdir="${src.dir}" 
+               destdir="${build.classes.dir}" 
+               source="17" 
+               target="17" 
+               encoding="UTF-8" 
+               includeantruntime="false" 
+               debug="true">
+            <classpath>
+                <fileset dir="${web.docbase.dir}/WEB-INF/lib" erroronmissingdir="false">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="dist" depends="compile" description="Packages WAR file">
+        <copy todir="${build.web.dir}">
+            <fileset dir="${web.docbase.dir}"/>
+        </copy>
+        <war destfile="${dist.dir}/${war.name}" webxml="${web.docbase.dir}/WEB-INF/web.xml">
+            <fileset dir="${web.docbase.dir}"/>
+            <classes dir="${build.classes.dir}"/>
+        </war>
+        <echo message="WAR file created at: ${dist.dir}/${war.name}"/>
+    </target>
+
+    <target name="clean" depends="-init" description="Cleans build and distribution directories">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <echo message="Cleaned build and dist directories."/>
+    </target>
+
+</project>
